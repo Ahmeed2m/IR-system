@@ -28,15 +28,20 @@ def _preprocess():
         # print(words)
         doc['toks'] = words
     
-    print(data)
+    # print(data)
 
 def _tokenize():
     global data
-    toks = []
-    for doc in data:
-        raw = doc['text']
-        
-        
+    toks = {}
+    for i,doc in enumerate(data):
+        raw = doc['toks']
+        for word in raw:
+            if word not in toks:
+                toks[word] = set([i+1])
+            else:
+                toks[word].add(i+1)
+    print(toks)
+
 def main(argv):
     global mainPath, data
     mainPath  = dirname(dirname(abspath(__file__)))
@@ -47,4 +52,4 @@ def main(argv):
 if __name__ == "__main__":
     main(sys.argv[1:])
     _preprocess()
-    # _tokenize()
+    _tokenize()
