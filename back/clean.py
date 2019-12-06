@@ -3,12 +3,16 @@ import sys
 import string, re
 from os.path import dirname, abspath, join
 import glob
+
+
 main_path=dirname(dirname(abspath(__file__)))
 path_to_json = main_path+"/DataCollection/"
 json_pattern = join(path_to_json,'*.json')
 file_list = glob.glob(json_pattern)
 DataCollection = dict()
 stop_words = []
+
+
 def _loadData():
     global file_list,DataCollection
     for index,file in enumerate(file_list):
@@ -21,6 +25,8 @@ def _loadData():
             line = line[:-1]
             stop_words.append(line)
     #print(stop_words)
+
+
 def _preprocess():
     global DataCollection,stop_words
 
@@ -37,7 +43,19 @@ def _preprocess():
                 cleaned_tokens.append(word)
         # print(words)
         doc['toks'] = cleaned_tokens
-    
+
+def _invertedIndex():
+    global DataCollection
+    inverted_index = {}
+    for i,doc in DataCollection.items():
+        raw = doc['toks']
+        for word in raw:
+            if(word not in inverted_index):
+                inverted_index[word]=set([i+1])
+            else:
+                inverted_index[word].add(i+1)
+    print(inverted_index)
+
 def _postionalIndex():
     global DataCollection
     postional_index = {}
@@ -50,8 +68,8 @@ def _postionalIndex():
                 postional_index[word][i+1]=[]
         for index,word in enumerate(raw):
             postional_index[word][i+1].append(index)
-            
-    print(postional_index)
+
+    # print(postional_index)
 
 
 def main(argv):
@@ -65,4 +83,5 @@ if __name__ == "__main__":
     #main(sys.argv[1:])
     _loadData()
     _preprocess()
-    _tokenize()
+    _postionalIndex()
+    _invertedIndex()
