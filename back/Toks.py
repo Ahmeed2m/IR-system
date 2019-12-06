@@ -20,7 +20,7 @@ def _preprocess():
         # print(words)
         for i,word in enumerate(words):
             # alpha-numric and not stopword
-            if word.isalnum() and word.lower() not in  ['the', 'of', 'a', 'an']:
+            if word.isalnum() and (word.lower() not in  ['the', 'of', 'a', 'an']):
                 word = word.lower()
                 words[i] = word
             else:
