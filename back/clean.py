@@ -3,6 +3,10 @@ import sys
 import string, re
 from os.path import dirname, abspath, join
 import glob
+from nltk.stem import PorterStemmer
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+stemmer= PorterStemmer()
 main_path=dirname(dirname(abspath(__file__)))
 path_to_json = main_path+"/DataCollection/"
 json_pattern = join(path_to_json,'*.json')
@@ -21,9 +25,8 @@ def _loadData():
             line = line[:-1]
             stop_words.append(line)
     #print(stop_words)
-def _preprocess():
+def _preprocessDocs():
     global DataCollection,stop_words
-
     for i,doc in DataCollection.items():
         text = doc['text']
         # re.split requires '|' between delimiters and to be escaped properly.
@@ -34,10 +37,23 @@ def _preprocess():
             # alpha-numric and not stopword
             if(word.isalnum() and (word.lower() not in stop_words)):
                 word = word.lower()
-                cleaned_tokens.append(word)
+                cleaned_tokens.append(normalization(word))
         # print(words)
         doc['toks'] = cleaned_tokens
-    
+def normalization(word):
+    return stemmer.stem(word)
+
+def preprocessQuery(query):
+    cleaned_query=[]
+    regexPattern = '|'.join(map(re.escape, string.punctuation+" "))  
+    words = re.split(regexPattern,query)
+    for word in words:
+        if(word.isalnum() and (word.lower() not in stop_words)):
+            word = word.lower()
+            cleaned_query.append(normalization(word))
+            
+    return cleaned_query
+
 def _postionalIndex():
     global DataCollection
     postional_index = {}
@@ -50,8 +66,9 @@ def _postionalIndex():
                 postional_index[word][i+1]=[]
         for index,word in enumerate(raw):
             postional_index[word][i+1].append(index)
-            
-    print(postional_index)
+    with open("postional_index.json","w+") as outputfile:
+        json.dump(postional_index,outputfile)       
+    #print(postional_index)
 
 
 def main(argv):
@@ -64,5 +81,5 @@ def main(argv):
 if __name__ == "__main__":
     #main(sys.argv[1:])
     _loadData()
-    _preprocess()
-    _tokenize()
+    _preprocessDocs()
+    _postionalIndex()
