@@ -6,6 +6,7 @@ import glob
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
+
 stemmer= PorterStemmer()
 main_path=dirname(dirname(abspath(__file__)))
 path_to_json = main_path+"/DataCollection/"
@@ -13,6 +14,7 @@ json_pattern = join(path_to_json,'*.json')
 file_list = glob.glob(json_pattern)
 DataCollection = dict()
 stop_words = []
+
 def _loadData():
     global file_list,DataCollection
     for index,file in enumerate(file_list):
@@ -25,6 +27,8 @@ def _loadData():
             line = line[:-1]
             stop_words.append(line)
     #print(stop_words)
+
+
 def _preprocessDocs():
     global DataCollection,stop_words
     for i,doc in DataCollection.items():
@@ -40,8 +44,11 @@ def _preprocessDocs():
                 cleaned_tokens.append(normalization(word))
         # print(words)
         doc['toks'] = cleaned_tokens
+
+
 def normalization(word):
     return stemmer.stem(word)
+
 
 def preprocessQuery(query):
     cleaned_query=[]
@@ -53,6 +60,20 @@ def preprocessQuery(query):
             cleaned_query.append(normalization(word))
             
     return cleaned_query
+
+
+def _invertedIndex():
+    global DataCollection
+    inverted_index = {}
+    for i,doc in DataCollection.items():
+        raw = doc['toks']
+        for word in raw:
+            if(word not in inverted_index):
+                inverted_index[word]=set([i+1])
+            else:
+                inverted_index[word].add(i+1)
+    # print(inverted_index)
+    return inverted_index
 
 def _postionalIndex():
     global DataCollection
@@ -69,17 +90,11 @@ def _postionalIndex():
     with open("postional_index.json","w+") as outputfile:
         json.dump(postional_index,outputfile)       
     #print(postional_index)
+    return postional_index
 
-
-def main(argv):
-    """global mainPath, data
-    mainPath  = dirname(dirname(abspath(__file__)))
-    if argv[0] == 'load':
-        fileName = argv[1]
-        data = _loadData(join(mainPath, fileName))"""
 
 if __name__ == "__main__":
-    #main(sys.argv[1:])
     _loadData()
     _preprocessDocs()
+    _invertedIndex()
     _postionalIndex()
