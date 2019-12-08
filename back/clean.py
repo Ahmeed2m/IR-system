@@ -72,6 +72,10 @@ def _invertedIndex():
                 inverted_index[word]=set([i+1])
             else:
                 inverted_index[word].add(i+1)
+    for k in inverted_index.keys():
+        inverted_index[k] = list(inverted_index[k])
+    with open("inverted_index.json","w+") as outputfile:
+        json.dump(inverted_index,outputfile) 
     # print(inverted_index)
     return inverted_index
 
