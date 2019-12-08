@@ -29,11 +29,11 @@ class Positional_index():
         posting1 = posting[p1]
         posting2 = posting[p2]
         result = {}
-        for key in posting[p1].keys() & posting[p2].keys():
-            print("DOC",key)
-            print(p1,posting1[key])
-            print(p2,posting2[key])
-            print("***")
+        for key in sorted(posting[p1].keys() & posting[p2].keys()):
+        #     print("DOC",key)
+        #     print(p1,posting1[key])
+        #     print(p2,posting2[key])
+        #     print("***")
             final = [x for x in posting1[key] for y in posting2[key] if y-x==offset]
             if final != []:
                 result[key]= final
@@ -46,21 +46,25 @@ class Positional_index():
 
     def phraseQuery(self,query):
         posting = self.getQueryPosting(query)
-        print(posting)
+        if(len(posting)==1):
+            return [key for key in self.postional_index[posting[0]]]
         posting_pairs = [(posting[i],posting[i+1]) for i in range(0,len(posting)-1)]
         final =  []
         for a,b in posting_pairs:
-            print(a,b)
+            # print(a,b)
             final.append(self.intersectPI(a,b,1))
         print(final)
-        finalkeys=final[0].keys()
-        for i in range(1,len(final)-1):
-            for key in final[i].key():
-                if key not in finalkeys:
-                    return 0
-                
-
+        if len(final) == 1:
+            return [key for key in list(final[0].keys())]
+        l=[]
+        for key in final[0].keys() :
+            for i in range(1,len(final)):
+                if key not in final[i].keys():
+                    break
+                else:
+                    l.append((key, [(y-x)==1 for x in final[0][key] for y in final[i][key]]))
+        return [x[0] for x in l]
 
 if __name__ == "__main__":
     x = Positional_index()
-    x.phraseQuery("apple watch apple")
+    print(x.phraseQuery("google"))
