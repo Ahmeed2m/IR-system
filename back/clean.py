@@ -21,7 +21,7 @@ def _loadData():
         with open(file,'r') as json_file:
             data = json.load(json_file)
             DataCollection[index]=data
-    with open('stopwords.txt','r') as input_file:
+    with open(main_path+'/back/stopwords.txt','r') as input_file:
         file_content = input_file.readlines()
         for line in file_content:
             line = line[:-1]
@@ -51,6 +51,7 @@ def normalization(word):
 
 
 def preprocessQuery(query):
+    _loadData()
     cleaned_query=[]
     regexPattern = '|'.join(map(re.escape, string.punctuation+" "))  
     words = re.split(regexPattern,query)
