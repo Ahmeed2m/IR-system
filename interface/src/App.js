@@ -29,22 +29,20 @@ function App() {
 
   const showModal = e =>{
     let old = modal
-    old.map((item,index)=>{
-      if (index!==e){
-        item=false
-      }else{
-        item=true
-      }
-    })
-    console.log(old);
+    for(let i=0;i<old.length;i++){
+      old[i]=false
+    }
+    old[e] = true
+    // console.log(old);
     setModal(old)
   }
+
   useEffect(()=>{
-    console.log(modal);
-    if(result[0]!==undefined)
+    // console.log(modal);
+    if(modal !==undefined && result[0]!==undefined)
     {
-        setPrint(
-        <div>{result.map((item,index) => {
+      setPrint(
+        <span>{result.map((item,index) => {
           // showModal(index)
           return <><li onClick={()=>showModal(index)} ><a >{Object.values(item)[2]}</a></li>
           <Modal
@@ -55,10 +53,11 @@ function App() {
           >
             <p>{Object.values(item)[1]}</p>
           </Modal></>
-        })}</div>
+        })}</span>
     );
   }
-  },[modal])
+  console.log(modal);
+  })
 
   useEffect(()=>{
     if (result[0] === "500"){
