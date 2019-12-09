@@ -2,9 +2,11 @@
 from flask import Flask, request, make_response, jsonify
 from flask.json import jsonify
 from flask_restful import Resource, Api, reqparse
+from flask_cors import CORS
 import sys
 from os.path import dirname,abspath
 app = Flask(__name__)
+cors = CORS(app)
 api = Api(app)
 version = "0.0"
 # to support relative import 
@@ -31,7 +33,7 @@ class ApiVer(Resource):
         args = parser.parse_args()
         print(args)
         if args['type']=="phrase":
-            return make_response(jsonify(args,phrase.phraseQuery(args['text'])), 200)
+            return make_response(jsonify(args,phrase.phraseQueryWrapper(args['text'])), 200)
         return make_response(jsonify(), 200)
 
 api.add_resource(ApiRoot, '/')

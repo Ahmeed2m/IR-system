@@ -4,8 +4,6 @@ import string, re
 from os.path import dirname, abspath, join
 import glob
 from nltk.stem import PorterStemmer
-from nltk.tokenize import word_tokenize
-from nltk.stem import WordNetLemmatizer
 
 stemmer= PorterStemmer()
 main_path=dirname(dirname(abspath(__file__)))
@@ -49,6 +47,9 @@ def _preprocessDocs():
 def normalization(word):
     return stemmer.stem(word)
 
+def getData():
+    _loadData()
+    return(DataCollection)
 
 def preprocessQuery(query):
     _loadData()
