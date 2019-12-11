@@ -12,9 +12,10 @@ version = "0.0"
 # to support relative import 
 sys.path.append(dirname(dirname(abspath(__file__))))
 from Algorthims.postional_index_model import Positional_index
-# from Algorthims.vector_space_model import Positional_index
+from Algorthims.vector_space_model import VectorSpace
 
 phrase = Positional_index()
+freetext = VectorSpace()
 
 class ApiRoot(Resource):
     def get(self):
@@ -33,7 +34,9 @@ class ApiVer(Resource):
         args = parser.parse_args()
         print(args)
         if args['type']=="phrase":
-            return make_response(jsonify(args,phrase.phraseQueryWrapper(args['text'])), 200)
+            return make_response(jsonify(phrase.phraseQueryWrapper(args['text'])), 200)
+        if args['type']=="ftq":
+            return make_response(jsonify(freetext.freeTextQueryWrapper(args['text'])), 200)
         return make_response(jsonify(), 200)
 
 api.add_resource(ApiRoot, '/')

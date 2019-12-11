@@ -1,4 +1,3 @@
-from back import clean
 import json
 import sys
 import string
@@ -7,6 +6,7 @@ from os.path import dirname, abspath, join
 import glob
 # to support relative import
 sys.path.append(dirname(dirname(abspath(__file__))))
+from back import clean
 
 
 class Positional_index():

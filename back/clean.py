@@ -98,6 +98,17 @@ def _postionalIndex():
     #print(postional_index)
     return postional_index
 
+def queryInvertedIndex(posting):
+    inverted_index = {}
+    for i,word in enumerate(posting):
+        if(word not in inverted_index):
+            inverted_index[word]=set([i])
+        else:
+            inverted_index[word].add(i)
+    
+    for k in inverted_index.keys():
+        inverted_index[k] = list(inverted_index[k])
+    return inverted_index
 
 if __name__ == "__main__":
     _loadData()

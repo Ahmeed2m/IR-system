@@ -3,6 +3,7 @@ import logo from './logo.png';
 import axios from 'axios';
 import './App.css';
 import { Input,Result,Radio,Modal } from 'antd';
+var uuid = require('uuid');
 const { Search } = Input;
 
 
@@ -10,14 +11,15 @@ function App() {
   const [result,setResult] = useState({});
   const [radio,setRadio] = useState({"value":1});
   const [print,setPrint] = useState();
-  const [modal,setModal] = useState();
+  const [modal,setModal] = useState(["NULL",false,"NULL"]);
+
   const search = e =>{
     let Qtype = "phrase";
     if(radio['value']===2){
       Qtype = "ftq"
     }
-    axios.get('http://localhost:5000/query?type='+Qtype+'&text='+e).then(response => {
-      setResult(Object.values(response.data[1]))
+    axios.get('http://localhost:7082/query?type='+Qtype+'&text='+e).then(response => {
+      setResult(Object.values(response.data))
     })
   }
   const onChange = e => {
@@ -25,40 +27,35 @@ function App() {
     setRadio({
       value: e.target.value,
     });
+    setPrint("")
   };
 
-  const showModal = e =>{
-    let old = modal
-    for(let i=0;i<old.length;i++){
-      old[i]=false
+  const handleOk = e => {
+    setModal(['',false,''])
+  };
+
+  const handleCancel = e => {
+    setModal(['',false,''])
+  };
+
+  const showModal = item =>{
+    let score = " "
+    if(item['score']!== undefined){
+      score = "score : " + item['score']
     }
-    old[e] = true
-    // console.log(old);
-    setModal(old)
+    setModal([item['title'],true,item['text'],score,item['src']])
   }
-
-  useEffect(()=>{
-    // console.log(modal);
-    if(modal !==undefined && result[0]!==undefined)
-    {
-      setPrint(
-        <span>{result.map((item,index) => {
-          // showModal(index)
-          return <><li onClick={()=>showModal(index)} ><a >{Object.values(item)[2]}</a></li>
-          <Modal
-            title="Basic Modal"
-            visible={modal[index]}
-            // onOk={this.handleOk}
-            // onCancel={this.handleCancel}
-          >
-            <p>{Object.values(item)[1]}</p>
-          </Modal></>
-        })}</span>
-    );
-  }
-  console.log(modal);
-  })
-
+  function compare(a, b) {
+    const bandA = a.score;
+    const bandB = b.score;
+    let comparison = 0;
+    if (bandA > bandB) {
+      comparison = -1;
+    } else if (bandA < bandB) {
+      comparison = 1;
+    }
+    return comparison;
+  }  
   useEffect(()=>{
     if (result[0] === "500"){
       setPrint(
@@ -71,11 +68,16 @@ function App() {
       )
     }
     else if (result[0]!==undefined){
-      let newModal=[]
-      for(var i = 0; i < result.length; i++) {
-        newModal.push(false);
-      }
-      setModal(newModal)
+      console.log(result);
+      let f =result.sort(compare);
+      console.log(f);
+      setPrint(
+        f.map((item) => {
+          item['key'] =uuid.v4()
+          return <li key={item['key']} onClick={()=>showModal(item)} ><a>{item['title']}</a></li>
+
+        })
+      );
     }
   },[result]);
 
@@ -95,7 +97,18 @@ function App() {
         <Radio value={2}>Free Text</Radio>
       </Radio.Group>
         
-            {print}
+        {print}
+        <Modal
+          title={modal[0]}
+          visible={modal[1]}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={null}
+        >
+          <p>{modal[2]}</p>
+          <footer>{modal[3]}</footer>
+          <footer>src: <a target="_blank" href={modal[4]}>Here</a></footer>
+        </Modal>
         
       </div>
     </div>
