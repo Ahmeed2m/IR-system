@@ -5,6 +5,8 @@ from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS
 import sys
 from os.path import dirname,abspath
+import os
+import subprocess
 app = Flask(__name__)
 cors = CORS(app)
 api = Api(app)
@@ -39,8 +41,22 @@ class ApiVer(Resource):
             return make_response(jsonify(freetext.freeTextQueryWrapper(args['text'])), 200)
         return make_response(jsonify(), 200)
 
+class UpdateIndex(Resource):
+    def get(self):
+        wd = dirname(dirname(abspath(__file__)))
+        os.chdir(wd+"/back")
+        result1 = os.system('python clean.py')
+        os.chdir(wd+"/Algorthims")
+        result2 = os.system('python vector_space_model.py')
+        os.chdir(wd)
+        if(not result1 and not result2):
+            return make_response(jsonify({}), 200)
+        else:
+            return make_response(jsonify({}),500)
+
 api.add_resource(ApiRoot, '/')
 api.add_resource(ApiVer, '/query')
+api.add_resource(UpdateIndex, '/update')
 
 if __name__ == '__main__':
     app.run(debug=True)

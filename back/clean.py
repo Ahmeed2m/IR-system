@@ -32,7 +32,7 @@ def _preprocessDocs():
     for i,doc in DataCollection.items():
         text = doc['text']
         # re.split requires '|' between delimiters and to be escaped properly.
-        regexPattern = '|'.join(map(re.escape, string.punctuation+" "))  
+        regexPattern = '|'.join(map(re.escape, string.punctuation+" \n\t"))  
         words = re.split(regexPattern,text)
         cleaned_tokens = []
         for i,word in enumerate(words):
