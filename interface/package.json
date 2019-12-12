@@ -17,7 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "dev":"npm run start & npm run serve",
-    "production": "serve -s build && npm run serve",
+    "production": "serve -s build & npm run serve",
     "serve": "FLASK_APP=../back/app.py flask run --port=7082",
     "eject": "react-scripts eject"
   },
