@@ -40,6 +40,7 @@ class VectorSpace():
     def getData(self):
         with open(self.path+"/Algorthims/tfidf.json", "r") as json_file:
             self.tfidf = pd.read_json(json.load(json_file))
+        # print(self.tfidf)
     
     def getQueryPosting(self, query):
         query_posting = clean.preprocessQuery(query)
@@ -72,6 +73,7 @@ class VectorSpace():
 
         df = self.df
         tf = self.tfidf['q']
+
         for i in self.tfidf.index:
             self.tfidf['q'][i]= (np.log10(tf[i]+1) )* np.log10(y/df[i])
         # print(self.tfidf)
@@ -110,7 +112,8 @@ class VectorSpace():
                 tf = self.tf.iat[t,d]
                 self.tfidf.iat[t,d] = ( np.log10(tf+1) )* np.log10(y/df)
         with open("tfidf.json","w+") as outputfile:
-            json.dump(self.tfidf.to_json(orient='records'),outputfile)
+            # json.dump(self.tfidf.to_json(orient='records'),outputfile)
+            json.dump(self.tfidf.to_json(),outputfile)
         # print(self.tfidf)
 
     def cosineSimlarity(self,doc1,doc2):
@@ -122,7 +125,6 @@ class VectorSpace():
             eucLen1 += np.power(doc1[i],2)
             eucLen2 += np.power(doc2[i],2)
         return numerator / np.sqrt(eucLen1) * np.sqrt(eucLen2)
-        pass
 
     def similarity(self,flag=False):
         self.simMatrix = {}

@@ -1,0 +1,5 @@
+{
+    "title":"Amazon is now offering quantum computing as a service",
+    "text":"Google and IBM may be battling for quantum supremacy, but Amazon is currently happy to be a middleman — today, it’s announcing and launching a preview of Amazon Braket, its attempt to turn the nascent field of quantum computing into a service you can access over the internet, a month after Microsoft did something similar. “Amazon Braket is a fully managed AWS service, with security & encryption baked in at each level,” the company explains in a blog post.\n For now, it sounds like a pretty limited affair, where “you” will mean Amazon’s corporate customers, and where “service” means the ability to experiment by running simulations on a set of existing quantum computers from partners D-Wave, IonQ, and Rigetti. (IonQ is also a Microsoft Azure Quantum partner.)",
+    "src":"https://www.theverge.com/2019/12/2/20992602/amazon-is-now-offering-quantum-computing-as-a-service"
+}
