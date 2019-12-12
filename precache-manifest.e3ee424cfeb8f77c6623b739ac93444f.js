@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "203a904dcd5bea43d10a696b8d0181e2",
+    "revision": "2abafea15614ce29619628928484e9d0",
     "url": "/IR-system/index.html"
   },
   {
-    "revision": "c9db6976d12247e991e6",
+    "revision": "efa7a6bf55ab914924a8",
     "url": "/IR-system/static/css/main.588a1c9b.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/IR-system/static/js/2.423ea7aa.chunk.js.LICENSE"
   },
   {
-    "revision": "c9db6976d12247e991e6",
-    "url": "/IR-system/static/js/main.6a738f3b.chunk.js"
+    "revision": "efa7a6bf55ab914924a8",
+    "url": "/IR-system/static/js/main.8e4ed972.chunk.js"
   },
   {
     "revision": "3dc637b6d19f4a5c2601",
