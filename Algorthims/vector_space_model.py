@@ -13,10 +13,10 @@ from back import clean
 
 display = pd.options.display
 
-display.max_columns = 1000
-display.max_rows = 1000
-display.max_colwidth = 199
-display.width = None
+# display.max_columns = 1000
+# display.max_rows = 1000
+# display.max_colwidth = 199
+# display.width = None
 
 class VectorSpace():
     def __init__(self):
@@ -72,7 +72,7 @@ class VectorSpace():
         # print(self.tfidf)
 
         df = self.df
-        tf = self.tfidf['q']
+        tf = self.tfidf['q'].copy()
 
         for i in self.tfidf.index:
             self.tfidf['q'][i]= (np.log10(tf[i]+1) )* np.log10(y/df[i])
@@ -84,13 +84,9 @@ class VectorSpace():
         # print(self.df)
     
     def calculateTF(self):
-        keys=set()
-        for x in self.positionalIndex.values():
-            for y in x.keys():
-                keys.add(y)
-        cols = sorted(list(keys))
-        # construct dataframe from dict with rows names as the keys
-        self.tf = pd.DataFrame.from_dict(self.positionalIndex,orient='index')
+        # List of Docs names
+        cols = list(self.tf.columns)
+        # No. of terms and No. of docs
         x,y = self.tf.shape
         # fill NaNs with zeros
         self.tf = self.tf.fillna(0)
@@ -101,17 +97,17 @@ class VectorSpace():
         # print(self.tf)
 
     def calculateTF_IDF(self):
-        self.tfidf = self.tf
+        self.tfidf = self.tf.copy()
         x,y = self.tfidf.shape
-        rows = list(self.tfidf.index)
+        terms = list(self.tfidf.index)
         self.tfidf.index.name = 'term'
         for t in range(0,x):
-            term = rows[t]
+            term = terms[t]
             df = self.df[term]
             for d in range(0,y):
                 tf = self.tf.iat[t,d]
                 self.tfidf.iat[t,d] = ( np.log10(tf+1) )* np.log10(y/df)
-        with open("tfidf.json","w+") as outputfile:
+        with open("Algorthims/tfidf.json","w") as outputfile:
             # json.dump(self.tfidf.to_json(orient='records'),outputfile)
             json.dump(self.tfidf.to_json(),outputfile)
         # print(self.tfidf)
