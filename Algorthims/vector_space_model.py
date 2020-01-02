@@ -2,6 +2,7 @@ import json
 import sys
 import string
 import re
+import os
 from os.path import dirname, abspath, join
 import pandas as pd
 from pandas.io.json import json_normalize
@@ -23,6 +24,7 @@ class VectorSpace():
         self.invertedIndex = {}
         self.positionalIndex = {}
         self.path = dirname(dirname(abspath(__file__)))
+        os.chdir(self.path)
         self.df = {}
         self.tf = {}
         self.tfidf = {}
